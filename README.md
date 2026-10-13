@@ -1,6 +1,6 @@
 # Jam Nail Spa
 
-React + TypeScript + Vite + Tailwind CSS starter with empty Navbar and Hero components on a white background.
+React + TypeScript + Vite + Tailwind CSS
 
 ## Development
 
