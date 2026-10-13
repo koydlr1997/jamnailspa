@@ -66,6 +66,14 @@
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
+  transition:
+    opacity 250ms ease,
+    background-color 250ms ease;
+}
+
+.navbar-link:hover,
+.navbar-link:focus-visible {
+  opacity: 0.8;
 }
 
 .navbar-link::after {
@@ -76,14 +84,13 @@
   left: 0;
   height: 1px;
   background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 220ms ease;
+  opacity: 0;
+  transition: opacity 250ms ease;
 }
 
 .navbar-link:hover::after,
 .navbar-link:focus-visible::after {
-  transform: scaleX(1);
+  opacity: 1;
 }
 
 .navbar-brand {
@@ -97,6 +104,8 @@
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
+  animation: navbar-content-enter 1000ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  transition: opacity 250ms ease;
 }
 
 .navbar-brand-icon {
@@ -106,6 +115,11 @@
   object-fit: contain;
   filter: var(--navbar-icon-filter);
   transition: filter 250ms ease;
+}
+
+.navbar-brand:hover,
+.navbar-brand:focus-visible {
+  opacity: 0.8;
 }
 
 .navbar-socials {
@@ -122,14 +136,12 @@
   width: 36px;
   height: 40px;
   color: inherit;
-  transition:
-    transform 220ms ease,
-    opacity 220ms ease;
+  transition: opacity 250ms ease;
 }
 
-.navbar-social-link:hover {
+.navbar-social-link:hover,
+.navbar-social-link:focus-visible {
   opacity: 0.65;
-  transform: translateY(-2px);
 }
 
 .navbar-social-link img {
@@ -141,6 +153,23 @@
   outline: 2px solid currentColor;
   outline-offset: 5px;
   border-radius: 3px;
+}
+
+@keyframes navbar-content-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-links > li,
+  .navbar-social-link {
+    animation: navbar-content-enter 1000ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  }
 }
 
 @media (max-width: 1279px) {
@@ -191,6 +220,7 @@
     background: transparent;
     color: inherit;
     cursor: pointer;
+    animation: navbar-content-enter 1000ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
   }
 
   .navbar-burger span {
@@ -279,27 +309,11 @@
 
   .navbar-links > li {
     opacity: 0;
-    transform: translateY(-8px);
-    transition:
-      opacity 220ms ease,
-      transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 420ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .navbar-menu.is-open .navbar-links > li {
     opacity: 1;
-    transform: translateY(0);
-  }
-
-  .navbar-menu.is-open .navbar-links > li:nth-child(2) {
-    transition-delay: 35ms;
-  }
-
-  .navbar-menu.is-open .navbar-links > li:nth-child(3) {
-    transition-delay: 70ms;
-  }
-
-  .navbar-menu.is-open .navbar-links > li:nth-child(4) {
-    transition-delay: 105ms;
   }
 
   .navbar-link {
@@ -314,6 +328,11 @@
     display: none;
   }
 
+  .navbar-link:hover,
+  .navbar-link:focus-visible {
+    background-color: rgb(185 101 69 / 8%);
+  }
+
   .navbar-socials {
     display: none;
   }
@@ -324,6 +343,7 @@
   .site-header,
   .navbar *,
   .navbar *::after {
+    animation: none !important;
     transition: none !important;
   }
 }

@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Services from './components/Services'
+import ServicesMassage from './components/Services_massage'
 import useSmoothScroll from './hooks/useSmoothScroll'
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
       <main>
         <Hero />
         <Services />
+        <ServicesMassage />
       </main>
     </div>
   )
