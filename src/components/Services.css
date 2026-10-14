@@ -97,7 +97,15 @@
   object-fit: cover;
   background: #f3f0ed;
   transform: translate3d(0, var(--parallax-offset, 0px), 0);
+  scale: 1;
+  transition: scale 650ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .service-card:hover .service-card-image {
+    scale: 1.04;
+  }
 }
 
 .service-card-title {
@@ -162,6 +170,7 @@
     top: 0;
     height: 100%;
     transform: none;
+    transition: none;
     will-change: auto;
   }
 }
