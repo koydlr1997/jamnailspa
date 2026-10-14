@@ -95,6 +95,7 @@
 }
 
 .hero-services-button {
+  --button-breathe-color: 255 255 255;
   display: inline-flex;
   gap: 10px;
   align-items: center;
@@ -122,6 +123,29 @@
 .hero-services-button:hover {
   background: #48392e;
   color: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-services-button {
+    animation: service-button-breathe 3s ease-in-out infinite;
+  }
+
+  .hero-services-button:hover,
+  .hero-services-button:focus-visible,
+  .hero-services-button:active {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes service-button-breathe {
+  0%, 100% {
+    scale: 1;
+    box-shadow: 0 0 0 0 rgb(var(--button-breathe-color) / 0%);
+  }
+  50% {
+    scale: 1.025;
+    box-shadow: 0 0 0 6px rgb(var(--button-breathe-color) / 12%);
+  }
 }
 
 .hero-dots {

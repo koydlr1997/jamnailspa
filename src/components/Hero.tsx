@@ -9,7 +9,7 @@ const banners = [
 ];
 const slides = [...banners, ...banners];
 
-export default function Hero() {
+export default function Hero({ paused = false }: { paused?: boolean }) {
   const [position, setPosition] = useState(0);
   const [moving, setMoving] = useState(false);
   const [hidden, setHidden] = useState(() => document.hidden);
@@ -52,10 +52,10 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    if (hidden || reducedMotion) return;
+    if (paused || hidden || reducedMotion) return;
     const timer = window.setInterval(advance, 2500);
     return () => window.clearInterval(timer);
-  }, [advance, hidden, reducedMotion]);
+  }, [advance, hidden, paused, reducedMotion]);
 
   useEffect(() => {
     if (!moving) return;

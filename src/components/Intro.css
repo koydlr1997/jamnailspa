@@ -1,0 +1,145 @@
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: clamp(64px, 8vw, 120px) 10%;
+  background: #fff;
+  color: #000;
+  touch-action: none;
+}
+
+.intro-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2vw, 24px);
+}
+
+.intro.is-loading .intro-brand {
+  opacity: 0;
+}
+
+.intro.is-exiting {
+  animation: intro-screen-fade var(--intro-exit-duration) ease both;
+}
+
+/* Preserve entrance animations while the opening screen covers the page. */
+.site-content.is-intro-pending *,
+.site-content.is-intro-pending *::before,
+.site-content.is-intro-pending *::after {
+  animation-play-state: paused !important;
+}
+
+.intro-icon {
+  display: block;
+  flex-shrink: 0;
+  width: clamp(32px, 5vw, 64px);
+  height: clamp(32px, 5vw, 64px);
+  object-fit: contain;
+  filter: brightness(0);
+  transform-origin: center;
+}
+
+.intro-heading {
+  margin: 0;
+  font-family: var(--font-ngetic);
+  font-size: clamp(32px, 6vw, 80px);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.intro-letter-mask,
+.intro-letter-space,
+.intro-letter {
+  display: inline-block;
+}
+
+.intro-letter-mask {
+  /* Preserve the font's overhangs and the descenders in j and p. */
+  clip-path: inset(-0.25em -0.15em -0.3em -0.15em);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro-brand.is-revealed .intro-letter {
+    animation: intro-letter-reveal var(--intro-letter-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--letter-index) * var(--intro-letter-stagger));
+  }
+
+  .intro-brand.is-revealed .intro-icon {
+    animation: intro-icon-pop var(--intro-icon-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--intro-icon-delay);
+  }
+
+  .intro.is-exiting {
+    animation: intro-screen-exit var(--intro-exit-duration) cubic-bezier(0.76, 0, 0.24, 1) both;
+  }
+
+  .intro.is-exiting .intro-brand {
+    animation: intro-brand-exit 275ms ease both;
+  }
+}
+
+@keyframes intro-screen-exit {
+  0%, 12% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+@keyframes intro-brand-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.96);
+  }
+}
+
+@keyframes intro-screen-fade {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes intro-letter-reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.85em, 0);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes intro-icon-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.15);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  82% {
+    opacity: 1;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

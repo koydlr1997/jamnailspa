@@ -174,3 +174,10 @@
     will-change: auto;
   }
 }
+
+@media (max-width: 767px) {
+  .services-title {
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+}

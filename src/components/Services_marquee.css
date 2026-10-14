@@ -1,11 +1,11 @@
-.services-marquee {
+﻿.services-marquee {
   display: flex;
   align-items: center;
   width: 100%;
   overflow: hidden;
-  padding-block: 2.5vh;
-  background: transparent;
-  color: #000;
+  padding-block: 1.5vh;
+  background: #B96545;
+  color: #fff;
   font-family: var(--font-playfair);
   font-size: clamp(16px, 1.8vh, 22px);
   font-weight: 400;
@@ -51,7 +51,7 @@
 
 @media (min-width: 1024px) {
   .services-marquee {
-    padding-block: 0 5vh;
+    padding-block: 1.5vh;
   }
 }
 
@@ -71,4 +71,9 @@
   .services-marquee-text + .services-marquee-text {
     display: none;
   }
+}
+
+.services-marquee-separator {
+  display: inline-block;
+  margin-inline: 1em;
 }

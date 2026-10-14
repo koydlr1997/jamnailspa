@@ -1,102 +1,222 @@
 .services.services-massage {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-inline: 0;
-  min-height: 0;
-  height: calc(100svh - 90px);
-  max-height: 900px;
-  padding-block: clamp(20px, 3svh, 40px) clamp(12px, 2svh, 24px);
-  background: #fff;
+  padding-bottom: clamp(24px, 2.5vw, 40px);
 }
 
-.services-massage .services-header {
-  flex-shrink: 0;
-  padding-inline: clamp(16px, 4vw, 64px);
-  text-align: right;
-}
-
-.massage-mosaic {
-  display: grid;
-  isolation: isolate;
-  container-type: size;
-  --preview-width: min(30cqw, 64cqh);
-  --preview-height: min(37.5cqw, 80cqh);
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  margin-top: clamp(32px, 4vw, 64px);
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-rows: repeat(6, minmax(0, 1fr));
-  grid-template-areas: var(--mobile-areas);
-  gap: 0;
-}
-
-.massage-card {
+.massage-carousel {
+  --service-card-gap: clamp(20px, 2vw, 32px);
+  --service-image-ratio: 3 / 4;
+  --massage-card-width: 100%;
   position: relative;
-  z-index: 0;
-  min-width: 0;
-  min-height: 0;
+  margin-top: clamp(32px, 4vw, 64px);
 }
 
-.massage-card-photo {
+.massage-carousel-viewport {
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y pinch-zoom;
+}
+
+.massage-carousel-viewport:active {
+  cursor: grabbing;
+}
+
+.massage-carousel-track {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+
+.massage-carousel .massage-carousel-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(5, auto);
+  align-content: start;
+  flex: 0 0 var(--massage-card-width);
+  min-width: 0;
+  margin-right: var(--service-card-gap);
+}
+
+.massage-carousel-card > * {
+  min-width: 0;
+}
+
+.massage-carousel-card .service-card-media {
+  width: 100%;
+}
+
+.massage-carousel-controls {
+  position: absolute;
+  inset: 0 0 auto;
+  pointer-events: none;
+}
+
+/* Match the arrow height to the image, independently of the card copy. */
+.massage-carousel-controls::before {
+  content: '';
+  display: block;
+  width: var(--massage-card-width);
+  aspect-ratio: var(--service-image-ratio);
+}
+
+.massage-carousel-arrow {
   position: absolute;
   top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #e9e5e1;
+  border-radius: 50%;
+  background: #fff;
+  color: #b96545;
+  box-shadow: 0 4px 16px rgb(36 33 30 / 12%);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
+}
+
+.massage-carousel-prev {
+  left: 0;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+}
+
+.massage-carousel-next {
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .massage-carousel-arrow {
+    animation: massage-arrow-breathe 3s ease-in-out infinite;
+  }
+
+  .massage-carousel-arrow:hover,
+  .massage-carousel-arrow:focus-visible,
+  .massage-carousel-arrow:active {
+    animation: none;
+  }
+}
+
+@keyframes massage-arrow-breathe {
+  0%, 100% {
+    scale: 1;
+    box-shadow: 0 4px 16px rgb(36 33 30 / 12%), 0 0 0 0 rgb(185 101 69 / 0%);
+  }
+  50% {
+    scale: 1.06;
+    box-shadow: 0 5px 20px rgb(36 33 30 / 16%), 0 0 0 6px rgb(185 101 69 / 10%);
+  }
+}
+
+.massage-carousel-arrow:hover,
+.massage-carousel-arrow:active {
+  background: #b96545;
+  color: #fff;
+  box-shadow: 0 6px 20px rgb(36 33 30 / 18%);
+}
+
+.massage-carousel-arrow:focus-visible,
+.massage-carousel-viewport:focus-visible {
+  outline: 2px solid #b96545;
+  outline-offset: 4px;
+}
+
+.massage-carousel-viewport:focus-visible {
+  outline-offset: -2px;
+}
+
+.massage-carousel-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
   overflow: hidden;
-  background: #f3f0ed;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-.massage-card img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-@media (min-width: 768px) {
-  .massage-mosaic {
-    --preview-width: min(22cqw, 64cqh);
-    --preview-height: min(27.5cqw, 80cqh);
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    grid-template-rows: repeat(4, minmax(0, 1fr));
-    grid-template-areas: var(--desktop-areas);
-  }
-}
-
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .massage-card-photo {
-    transition:
-      width 450ms cubic-bezier(0.22, 1, 0.36, 1),
-      height 450ms cubic-bezier(0.22, 1, 0.36, 1),
-      left 450ms cubic-bezier(0.22, 1, 0.36, 1),
-      top 450ms cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 450ms ease;
+@media (min-width: 540px) {
+  .massage-carousel {
+    --massage-card-width: calc((100% - var(--service-card-gap)) / 2);
   }
 
-  .massage-card:hover .massage-card-photo {
-    width: var(--preview-width);
-    height: var(--preview-height);
-    left: calc(50% + var(--hover-shift-x, 0px));
-    top: calc(50% + var(--hover-shift-y, 0px));
-    box-shadow: 0 12px 28px rgb(0 0 0 / 18%);
-  }
-
-  .massage-card img {
-    transform: scale(1.025);
-  }
-
-  .massage-card:hover img {
-    animation: massage-photo-wiggle 220ms ease-in-out;
+  .massage-carousel-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(var(--service-card-gap) / -2);
+    width: 100%;
+    aspect-ratio: var(--service-image-ratio);
+    border-left: 1px solid #e9e5e1;
+    pointer-events: none;
   }
 }
 
-@keyframes massage-photo-wiggle {
-  0%, 100% { rotate: 0deg; }
-  30% { rotate: -0.6deg; }
-  70% { rotate: 0.6deg; }
+@media (min-width: 1024px) {
+  .massage-carousel {
+    --massage-card-width: calc((100% - 3 * var(--service-card-gap)) / 4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .massage-carousel-arrow {
+    transition: none;
+  }
+}
+
+.massage-card-title {
+  margin: 0 0 8px;
+  color: #b96545;
+  font-family: var(--font-roboto-condensed);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.massage-card-heading {
+  margin: 20px 0 8px;
+  font-family: var(--font-roboto-condensed);
+  font-size: clamp(24px, 2.2vw, 34px);
+  font-weight: 700;
+  /* Keep the text row independent of the fitted font size. */
+  line-height: clamp(19.2px, 1.76vw, 27.2px);
+  text-transform: uppercase;
+}
+
+.massage-card-heading,
+.massage-card-title:not(.massage-card-price) {
+  white-space: nowrap;
+}
+
+.massage-card-title:not(.massage-card-price) {
+  line-height: 18.2px;
+}
+
+.services-massage .service-card-description {
+  max-width: none;
+  text-align: justify;
+}
+
+.massage-card-price {
+  margin-top: 8px;
+  text-align: right;
+  font-family: var(--font-roboto-condensed);
+  color: #625b54;
+  font-size: 16px;
+  line-height: .8;
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  .services.services-massage {
+    min-height: 0;
+    padding-bottom: 16px;
+  }
+}
+
+/* Allow the longer tagline to wrap without overlapping on small screens. */
+@media (max-width: 767px) {
+  .services-massage .services-title {
+    line-height: 1.2;
+    text-wrap: balance;
+  }
 }

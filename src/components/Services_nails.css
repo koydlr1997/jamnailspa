@@ -1,0 +1,225 @@
+.services-nails {
+  width: 100%;
+  min-height: 60vh;
+  min-height: 60dvh;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+}
+
+.services-nails .nails-image-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  appearance: none;
+}
+
+.nails-image-button:focus-visible {
+  outline: 2px solid #b96545;
+  outline-offset: -2px;
+}
+
+.nails-lightbox {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 64px 24px 24px;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.nails-lightbox[open] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nails-lightbox::backdrop {
+  background: rgb(0 0 0 / 80%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.nails-lightbox > img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.nails-lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.nails-lightbox-close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nails-lightbox[open] > img {
+    animation: nails-image-open 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .nails-lightbox[open]::backdrop {
+    animation: nails-backdrop-open 300ms ease-out both;
+  }
+}
+
+@keyframes nails-image-open {
+  from { opacity: 0; transform: scale(.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes nails-backdrop-open {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.services.services-nails {
+  padding-block: clamp(24px, 2.5vw, 40px) clamp(48px, 5vw, 80px);
+  color: #24211e;
+  scroll-margin-top: 90px;
+}
+
+.services-nails-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 2.7fr);
+  gap: clamp(32px, 4vw, 64px);
+  width: 80%;
+  margin-inline: 10%;
+}
+
+.services-nails .services-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  padding: 0 clamp(16px, 2vw, 32px) 0 0;
+  border-bottom: 0;
+  border-right: 1px solid #e9e5e1;
+}
+
+.services-nails .services-heading {
+  font-size: clamp(24px, 3vw, 48px);
+  overflow-wrap: normal;
+}
+
+.services-nails .nails-designs-button {
+  --button-breathe-color: 72 57 46;
+  align-self: flex-start;
+  margin-top: 24px;
+  border-color: #48392e;
+  background: #48392e;
+  color: #fff;
+  cursor: pointer;
+}
+
+.services-nails .nails-designs-button:hover {
+  background: #b96545;
+  border-color: #b96545;
+  color: #fff;
+}
+
+.nails-designs-button:focus-visible {
+  outline: 2px solid #48392e;
+  outline-offset: 4px;
+}
+
+.services-nails .massage-carousel {
+  --service-card-gap: clamp(18px, 1.8vw, 28.8px);
+  min-width: 0;
+  margin-top: 0;
+}
+
+.services-nails .service-card-description {
+  max-width: none;
+  text-align: justify;
+  font-size: 13.5px;
+}
+
+.services-nails .massage-card-heading {
+  margin: 18px 0 7.2px;
+  font-size: clamp(21.6px, 1.98vw, 30.6px);
+  line-height: clamp(17.28px, 1.584vw, 24.48px);
+}
+
+.services-nails .massage-card-title {
+  margin-bottom: 7.2px;
+  font-size: 12.6px;
+}
+
+.services-nails .massage-card-title:not(.massage-card-price) {
+  line-height: 16.38px;
+}
+
+.services-nails .massage-card-price {
+  margin-top: 7.2px;
+  font-size: 14.4px;
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .services.services-nails {
+    min-height: 0;
+    padding-block: 16px 32px;
+  }
+
+  .services-nails .massage-carousel {
+    --massage-card-width: calc((100% - var(--service-card-gap)) / 2);
+  }
+}
+
+@media (min-width: 1200px) {
+  .services-nails .massage-carousel {
+    --massage-card-width: calc((100% - 2 * var(--service-card-gap)) / 3);
+  }
+}
+
+@media (max-width: 767px) {
+  .services-nails-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .services-nails .massage-carousel {
+    --service-card-gap: clamp(20px, 2vw, 32px);
+    width: 100%;
+    justify-self: center;
+  }
+
+  .services-nails .services-header {
+    padding: 0 0 clamp(28px, 3vw, 48px);
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 1px solid #e9e5e1;
+  }
+
+  .services-nails .services-title {
+    line-height: 1.2;
+  }
+}

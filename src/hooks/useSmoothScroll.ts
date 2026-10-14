@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
 import Lenis from 'lenis'
 
-export default function useSmoothScroll() {
+export default function useSmoothScroll(enabled = true) {
   useEffect(() => {
+    if (!enabled) return
+
     const lenis = new Lenis({
       autoRaf: true,
       smoothWheel: true,
@@ -13,5 +15,5 @@ export default function useSmoothScroll() {
     })
 
     return () => lenis.destroy()
-  }, [])
+  }, [enabled])
 }
