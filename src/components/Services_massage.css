@@ -1,5 +1,5 @@
 .services.services-massage {
-  padding-bottom: clamp(24px, 2.5vw, 40px);
+  padding-bottom: clamp(27.72px, 2.8875vw, 46.2px);
 }
 
 .massage-carousel {
@@ -209,12 +209,16 @@
 @media (min-width: 768px) and (max-width: 1199px) {
   .services.services-massage {
     min-height: 0;
-    padding-bottom: 16px;
+    padding-bottom: 18.48px;
   }
 }
 
 /* Allow the longer tagline to wrap without overlapping on small screens. */
 @media (max-width: 767px) {
+  .services.services-massage {
+    min-height: 0;
+  }
+
   .services-massage .services-title {
     line-height: 1.2;
     text-wrap: balance;

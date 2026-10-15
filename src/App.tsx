@@ -5,6 +5,8 @@ import Services from './components/Services'
 import ServicesMarquee from './components/Services_marquee'
 import ServicesMassage from './components/Services_massage'
 import ServicesNails from './components/Services_nails'
+import ServicesEyelash from './components/Services_eyelash'
+import ServicesWaxing from './components/Services_waxing'
 import Intro from './components/Intro'
 import useSmoothScroll from './hooks/useSmoothScroll'
 
@@ -53,6 +55,8 @@ export default function App() {
           <ServicesMarquee />
           <ServicesMassage />
           <ServicesNails />
+          <ServicesEyelash />
+          <ServicesWaxing />
         </main>
       </div>
     </div>

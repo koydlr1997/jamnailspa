@@ -27,7 +27,19 @@
 }
 
 .intro.is-exiting {
+  background: #b96545;
+  color: #fff;
   animation: intro-screen-fade var(--intro-exit-duration) ease both;
+}
+
+.intro.is-coloring {
+  background: #b96545;
+  color: #fff;
+}
+
+.intro.is-coloring .intro-icon,
+.intro.is-exiting .intro-icon {
+  filter: brightness(0) invert(1);
 }
 
 /* Preserve entrance animations while the opening screen covers the page. */
@@ -78,17 +90,55 @@
     animation-delay: var(--intro-icon-delay);
   }
 
+  .intro.is-coloring {
+    animation: intro-color-pulse var(--intro-color-duration) ease-in-out both;
+  }
+
+  .intro.is-coloring .intro-icon {
+    animation: intro-icon-color-pulse var(--intro-color-duration) ease-in-out both;
+  }
+
   .intro.is-exiting {
-    animation: intro-screen-exit var(--intro-exit-duration) cubic-bezier(0.76, 0, 0.24, 1) both;
+    will-change: transform;
+    animation: intro-screen-exit var(--intro-exit-duration) cubic-bezier(0.65, 0, 0.35, 1) both;
   }
 
   .intro.is-exiting .intro-brand {
-    animation: intro-brand-exit 275ms ease both;
+    animation: intro-brand-exit var(--intro-exit-duration) ease-out both;
+  }
+
+  .intro.is-exiting .intro-icon {
+    animation: none;
   }
 }
 
+@keyframes intro-color-pulse {
+  0%, 28%, 56% {
+    background-color: #fff;
+    color: #000;
+  }
+  14%, 42%, 70%, 100% {
+    background-color: #b96545;
+    color: #fff;
+  }
+}
+
+@keyframes intro-icon-color-pulse {
+  0%, 28%, 56% {
+    filter: brightness(0) invert(0);
+  }
+  14%, 42%, 70%, 100% {
+    filter: brightness(0) invert(1);
+  }
+}
+
+@keyframes intro-screen-fade {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
 @keyframes intro-screen-exit {
-  0%, 12% {
+  0%, 30% {
     transform: translate3d(0, 0, 0);
   }
   100% {
@@ -97,19 +147,8 @@
 }
 
 @keyframes intro-brand-exit {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-16px) scale(0.96);
-  }
-}
-
-@keyframes intro-screen-fade {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  0% { opacity: 1; }
+  30%, 100% { opacity: 0; }
 }
 
 @keyframes intro-letter-reveal {

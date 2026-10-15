@@ -146,42 +146,6 @@ export default function ServicesMassage() {
   })
   const [currentSlide, setCurrentSlide] = useState(0)
 
-  useEffect(() => {
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (motionQuery.matches || !('IntersectionObserver' in window)) return
-
-    const targets = Array.from(
-      sectionRef.current?.querySelectorAll<HTMLElement>('.services-reveal') ?? [],
-    )
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return
-        entry.target.classList.remove('is-reveal-pending')
-        entry.target.classList.add('is-revealed')
-        observer.unobserve(entry.target)
-      })
-    }, { threshold: 0.1 })
-
-    targets.forEach((target) => {
-      target.classList.add('is-reveal-pending')
-      observer.observe(target)
-    })
-
-    function clearReveal() {
-      observer.disconnect()
-      targets.forEach((target) => {
-        target.classList.remove('is-reveal-pending', 'is-revealed')
-      })
-    }
-    function handleMotionChange() {
-      if (motionQuery.matches) clearReveal()
-    }
-    motionQuery.addEventListener('change', handleMotionChange)
-    return () => {
-      clearReveal()
-      motionQuery.removeEventListener('change', handleMotionChange)
-    }
-  }, [])
 
   useLayoutEffect(() => {
     const section = sectionRef.current
@@ -244,14 +208,14 @@ export default function ServicesMassage() {
       className="services services-massage"
       aria-labelledby="services-massage-heading"
     >
-      <header className="services-header services-reveal">
+      <header className="services-header">
         <p className="services-title">YOUR BODY IS THE TEMPLE OF YOUR SOUL,</p>
         <h2 id="services-massage-heading" className="services-heading">
           TAKE CARE OF IT.
         </h2>
       </header>
       <div
-        className="massage-carousel services-reveal"
+        className="massage-carousel"
         role="region"
         aria-roledescription="carousel"
         aria-label="Massage treatments"

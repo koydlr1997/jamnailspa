@@ -109,42 +109,6 @@ export default function ServicesNails() {
   })
   const [currentSlide, setCurrentSlide] = useState(0)
 
-  useEffect(() => {
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (motionQuery.matches || !('IntersectionObserver' in window)) return
-
-    const targets = Array.from(
-      sectionRef.current?.querySelectorAll<HTMLElement>('.services-reveal') ?? [],
-    )
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return
-        entry.target.classList.remove('is-reveal-pending')
-        entry.target.classList.add('is-revealed')
-        observer.unobserve(entry.target)
-      })
-    }, { threshold: 0.1 })
-
-    targets.forEach((target) => {
-      target.classList.add('is-reveal-pending')
-      observer.observe(target)
-    })
-
-    function clearReveal() {
-      observer.disconnect()
-      targets.forEach((target) => {
-        target.classList.remove('is-reveal-pending', 'is-revealed')
-      })
-    }
-    function handleMotionChange() {
-      if (motionQuery.matches) clearReveal()
-    }
-    motionQuery.addEventListener('change', handleMotionChange)
-    return () => {
-      clearReveal()
-      motionQuery.removeEventListener('change', handleMotionChange)
-    }
-  }, [])
 
   useLayoutEffect(() => {
     const section = sectionRef.current
@@ -200,20 +164,8 @@ export default function ServicesNails() {
     }
   }, [carouselApi])
 
-  return (
-    <section
-      ref={sectionRef}
-      id="services-nails"
-      className="services services-nails"
-      aria-labelledby="services-nails-heading"
-    >
-      <div className="services-nails-layout">
-      <header className="services-header services-reveal">
-        <p className="services-title">YOUR NAILS,</p>
-        <h2 id="services-nails-heading" className="services-heading">
-          OUR PRIORITY.
-        </h2>
-        <button
+  const designsButton = (
+    <button
           type="button"
           className="hero-services-button nails-designs-button"
           aria-controls="nails-carousel-viewport"
@@ -229,9 +181,25 @@ export default function ServicesNails() {
             style={{ flexShrink: 0 }}
           />
         </button>
+  )
+
+  return (
+    <section
+      ref={sectionRef}
+      id="services-nails"
+      className="services services-nails"
+      aria-labelledby="services-nails-heading"
+    >
+      <div className="services-nails-layout">
+      <header className="services-header">
+        <p className="services-title">YOUR NAILS,</p>
+        <h2 id="services-nails-heading" className="services-heading">
+          OUR PRIORITY.
+        </h2>
+        <div className="nails-designs-desktop">{designsButton}</div>
       </header>
       <div
-        className="massage-carousel services-reveal"
+        className="massage-carousel"
         role="region"
         aria-roledescription="carousel"
         aria-label="Nail treatments"
@@ -313,6 +281,7 @@ export default function ServicesNails() {
           Treatment {currentSlide + 1} of {treatments.length}
         </p>
       </div>
+      <div className="nails-designs-mobile">{designsButton}</div>
       </div>
       <dialog
         ref={dialogRef}

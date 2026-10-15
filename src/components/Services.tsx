@@ -35,48 +35,6 @@ const services = [
 export default function Services() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (motionQuery.matches || !("IntersectionObserver" in window)) return;
-
-    const targets = Array.from(
-      sectionRef.current?.querySelectorAll<HTMLElement>(".services-reveal") ??
-        [],
-    );
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.remove("is-reveal-pending");
-          entry.target.classList.add("is-revealed");
-          observer.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    targets.forEach((target) => {
-      target.classList.add("is-reveal-pending");
-      observer.observe(target);
-    });
-
-    function handleMotionChange() {
-      if (!motionQuery.matches) return;
-      observer.disconnect();
-      targets.forEach((target) =>
-        target.classList.remove("is-reveal-pending", "is-revealed"),
-      );
-    }
-
-    motionQuery.addEventListener("change", handleMotionChange);
-    return () => {
-      observer.disconnect();
-      motionQuery.removeEventListener("change", handleMotionChange);
-      targets.forEach((target) =>
-        target.classList.remove("is-reveal-pending", "is-revealed"),
-      );
-    };
-  }, []);
 
   useEffect(() => {
     const media = Array.from(
@@ -134,7 +92,7 @@ export default function Services() {
       aria-labelledby="services-heading"
       className="services"
     >
-      <header className="services-header services-reveal">
+      <header className="services-header">
         <p className="services-title">IT'S NOT JUST NAILS,</p>
         <h2 id="services-heading" className="services-heading">
           WHAT WE OFFER.
@@ -143,7 +101,7 @@ export default function Services() {
 
       <div className="services-grid">
         {services.map((service) => (
-          <article className="service-card services-reveal" key={service.title}>
+          <article className="service-card" key={service.title}>
             <div className="service-card-media">
               <img
                 className="service-card-image"

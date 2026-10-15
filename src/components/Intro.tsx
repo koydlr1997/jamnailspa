@@ -3,12 +3,14 @@ import './Intro.css'
 
 const brandName = 'jam nail spa'
 const letters = Array.from(brandName)
-const letterDuration = 950
-const letterStagger = 120
-const iconDelay = letterDuration + (letters.length - 1) * letterStagger + 100
-const iconDuration = 725
-const holdDuration = 210
-const exitDuration = 850
+// 700ms reveal + 1200ms color change + 450ms exit = 2350ms.
+const letterDuration = 240
+const letterStagger = 25
+const iconDelay = letterDuration + (letters.length - 1) * letterStagger + 20
+const iconDuration = 150
+const holdDuration = 40
+const colorDuration = 1200
+const exitDuration = 450
 
 type IntroProps = {
   onExitStart: () => void
@@ -17,7 +19,7 @@ type IntroProps = {
 
 export default function Intro({ onExitStart, onComplete }: IntroProps) {
   const iconRef = useRef<HTMLImageElement>(null)
-  const [phase, setPhase] = useState<'loading' | 'playing' | 'exiting'>('loading')
+  const [phase, setPhase] = useState<'loading' | 'playing' | 'coloring' | 'exiting'>('loading')
   const [reducedMotion, setReducedMotion] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
@@ -62,9 +64,14 @@ export default function Intro({ onExitStart, onComplete }: IntroProps) {
 
     if (phase === 'playing') {
       const timer = window.setTimeout(
-        () => setPhase('exiting'),
+        () => setPhase('coloring'),
         reducedMotion ? 350 : iconDelay + iconDuration + holdDuration,
       )
+      return () => window.clearTimeout(timer)
+    }
+
+    if (phase === 'coloring') {
+      const timer = window.setTimeout(() => setPhase('exiting'), reducedMotion ? 200 : colorDuration)
       return () => window.clearTimeout(timer)
     }
 
@@ -85,10 +92,15 @@ export default function Intro({ onExitStart, onComplete }: IntroProps) {
         '--intro-letter-stagger': `${letterStagger}ms`,
         '--intro-icon-delay': `${iconDelay}ms`,
         '--intro-icon-duration': `${iconDuration}ms`,
+        '--intro-color-duration': `${colorDuration}ms`,
         '--intro-exit-duration': `${reducedMotion ? 180 : exitDuration}ms`,
       } as CSSProperties}
       onAnimationEnd={(event) => {
-        if (phase === 'exiting' && event.target === event.currentTarget) onComplete()
+        if (
+          phase === 'exiting' &&
+          event.target === event.currentTarget &&
+          (event.animationName === 'intro-screen-exit' || event.animationName === 'intro-screen-fade')
+        ) onComplete()
       }}
     >
       <div
