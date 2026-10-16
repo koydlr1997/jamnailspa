@@ -1,4 +1,13 @@
-.services-waxing {
-  height: 50vh;
+.services.services-waxing {
+  width: 100%;
+  margin-inline: 0;
+  min-height: 100vh;
+  padding-top: 32px;
   background: #fff;
+}
+
+.services-waxing > .services-header {
+  width: 80%;
+  margin-inline: 10%;
+  padding-bottom: clamp(14px, 1.5vw, 24px);
 }

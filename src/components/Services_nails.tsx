@@ -1,6 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import useEmblaCarousel from 'embla-carousel-react'
+import useSectionReveal from '../hooks/useSectionReveal'
+import useCarouselEdges from '../hooks/useCarouselEdges'
 import './Services.css'
 import './Services_massage.css'
 import './Hero.css'
@@ -13,75 +15,78 @@ const treatments = [
     "heading": "Classic Manicure",
     "image": "/assets/services/manicure.png",
     "title": "EVERYDAY NAIL CARE",
-    "description": "Refresh your nails with careful shaping, cuticle care, and a polished finish.",
     "price": "PRICE"
   },
   {
     "heading": "Gel Manicure",
     "image": "/assets/banner1.png",
     "title": "LASTING COLOR & SHINE",
-    "description": "Enjoy a glossy gel finish with a fresh shade to complement your style.",
     "price": "PRICE"
   },
   {
     "heading": "Classic Pedicure",
     "image": "/assets/banner2.png",
     "title": "REFRESH & POLISH",
-    "description": "Treat your toes to thoughtful nail care and a beautifully polished finish.",
     "price": "PRICE"
   },
   {
     "heading": "Gel Pedicure",
     "image": "/assets/banner3.png",
     "title": "A LITTLE EXTRA SHINE",
-    "description": "Refresh your look with a smooth gel finish and your favorite color.",
     "price": "PRICE"
   },
   {
     "heading": "Soft Gel Extensions",
     "image": "/assets/services/manicure.png",
     "title": "LENGTH & SHAPE",
-    "description": "Explore a new nail shape and length with a set of soft gel extensions.",
     "price": "PRICE"
   },
   {
     "heading": "Polygel Extensions",
     "image": "/assets/banner1.png",
     "title": "YOUR STYLE, YOUR SHAPE",
-    "description": "Create a sculpted nail look tailored to your preferred shape and length.",
     "price": "PRICE"
   },
   {
     "heading": "Signature Nail Art",
     "image": "/assets/banner2.png",
     "title": "SMALL DETAILS, BIG STYLE",
-    "description": "Add a personal touch with nail art inspired by your favorite colors and details.",
     "price": "PRICE"
   },
   {
     "heading": "French Manicure",
     "image": "/assets/banner3.png",
     "title": "TIMELESS & REFINED",
-    "description": "Keep things classic with clean tips and a beautifully balanced finish.",
     "price": "PRICE"
   },
   {
     "heading": "Nail Care Ritual",
     "image": "/assets/services/manicure.png",
     "title": "RESTORE & REFRESH",
-    "description": "Give your natural nails a moment of attention with gentle grooming and care.",
     "price": "PRICE"
   },
   {
     "heading": "Nail Color Refresh",
     "image": "/assets/banner1.png",
     "title": "A FRESH NEW SHADE",
-    "description": "Switch up your style with a new color and a neat, polished finish.",
     "price": "PRICE"
   }
 ]
 
 export default function ServicesNails() {
+  const sectionRef = useRef<HTMLElement>(null)
+  useSectionReveal(sectionRef)
+  const [carouselRef, carouselApi] = useEmblaCarousel({
+    loop: true,
+    align: (viewSize, slideSize) => slideSize / 8 + Math.min(24, Math.max(12, viewSize * 0.015)),
+    duration: 35,
+    active: false,
+    breakpoints: {
+      '(max-width: 767px)': { active: true },
+      '(prefers-reduced-motion: reduce)': { duration: 0 },
+    },
+  })
+  useCarouselEdges(carouselApi, true)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [selectedImage, setSelectedImage] = useState<typeof treatments[number] | null>(null)
 
@@ -97,79 +102,10 @@ export default function ServicesNails() {
     }
   }, [selectedImage])
 
-  const sectionRef = useRef<HTMLElement>(null)
-  const [carouselRef, carouselApi] = useEmblaCarousel({
-    loop: true,
-    align: 'start',
-    slidesToScroll: 1,
-    duration: 35,
-    breakpoints: {
-      '(prefers-reduced-motion: reduce)': { duration: 0 },
-    },
-  })
-  const [currentSlide, setCurrentSlide] = useState(0)
-
-
-  useLayoutEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-    const textElements = Array.from(section.querySelectorAll<HTMLElement>(
-      '.massage-card-heading, .massage-card-title:not(.massage-card-price)',
-    ))
-    let disposed = false
-    let previousWidth = -1
-
-    function fitText() {
-      if (disposed) return
-      // Restore the CSS size first so text can grow again on wider cards.
-      textElements.forEach((element) => { element.style.fontSize = '' })
-      const sizes = textElements.map((element) => {
-        const baseSize = parseFloat(getComputedStyle(element).fontSize)
-        const availableWidth = element.clientWidth
-        return availableWidth > 0 && element.scrollWidth > availableWidth
-          ? `${baseSize * (availableWidth - 1) / element.scrollWidth}px`
-          : ''
-      })
-      textElements.forEach((element, index) => {
-        element.style.fontSize = sizes[index]
-      })
-    }
-
-    const observer = new ResizeObserver(([entry]) => {
-      if (entry.contentRect.width === previousWidth) return
-      previousWidth = entry.contentRect.width
-      fitText()
-    })
-    // Card width also changes when the carousel switches its visible slide count.
-    const card = section.querySelector<HTMLElement>('.massage-carousel-card')
-    if (card) observer.observe(card)
-    fitText()
-    void document.fonts.ready.then(fitText)
-    document.fonts.addEventListener('loadingdone', fitText)
-
-    return () => {
-      disposed = true
-      observer.disconnect()
-      document.fonts.removeEventListener('loadingdone', fitText)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!carouselApi) return
-    const updateSelection = () => setCurrentSlide(carouselApi.selectedScrollSnap())
-    updateSelection()
-    carouselApi.on('select', updateSelection).on('reInit', updateSelection)
-    return () => {
-      carouselApi.off('select', updateSelection).off('reInit', updateSelection)
-    }
-  }, [carouselApi])
-
   const designsButton = (
-    <button
-          type="button"
+    <a
           className="hero-services-button nails-designs-button"
-          aria-controls="nails-carousel-viewport"
-          onClick={() => carouselApi?.scrollNext()}
+          href="#nails-grid"
         >
           VIEW OUR DESIGNS
           <ArrowUpRight
@@ -180,7 +116,7 @@ export default function ServicesNails() {
             focusable="false"
             style={{ flexShrink: 0 }}
           />
-        </button>
+        </a>
   )
 
   return (
@@ -198,34 +134,20 @@ export default function ServicesNails() {
         </h2>
         <div className="nails-designs-desktop">{designsButton}</div>
       </header>
-      <div
-        className="massage-carousel"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label="Nail treatments"
-        onKeyDown={(event) => {
-          if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-            event.preventDefault()
-            if (event.key === 'ArrowLeft') carouselApi?.scrollPrev()
-            else carouselApi?.scrollNext()
-          }
-        }}
-      >
-        <div
-          id="nails-carousel-viewport"
-          className="massage-carousel-viewport"
-          ref={carouselRef}
-          tabIndex={0}
-          aria-label="Swipe or use the left and right arrow keys to browse treatments"
-        >
-          <div className="massage-carousel-track">
-            {treatments.map((treatment, index) => (
+      <div className="nails-cards-container" onKeyDown={(event) => {
+        if (!window.matchMedia('(max-width: 767px)').matches) return
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          event.preventDefault()
+          if (event.key === 'ArrowLeft') carouselApi?.scrollPrev()
+          else carouselApi?.scrollNext()
+        }
+      }}>
+      <div className="nails-cards-viewport" ref={carouselRef}>
+      <div id="nails-grid" className="nails-grid" aria-label="Nail treatments">
+            {treatments.map((treatment) => (
               <article
-                className="service-card massage-carousel-card"
+                className="service-card nails-card"
                 key={treatment.heading}
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`${index + 1} of ${treatments.length}: ${treatment.heading}`}
               >
                 <button
                   type="button"
@@ -246,40 +168,28 @@ export default function ServicesNails() {
                     width={600}
                     height={800}
                   />
+                  <span className="service-card-caption">
+                    <span className="massage-card-price">{treatment.price}</span>
+                  </span>
                 </button>
                 <h3 className="massage-card-heading">{treatment.heading}</h3>
                 <p className="massage-card-title">{treatment.title}</p>
-                <p className="service-card-description">
-                  {treatment.description}
-                </p>
-                <p className="massage-card-title massage-card-price">{treatment.price}</p>
               </article>
             ))}
-          </div>
-        </div>
-        <div className="massage-carousel-controls">
-          <button
-            type="button"
-            className="massage-carousel-arrow massage-carousel-prev"
-            aria-label="Previous nail treatment"
-            aria-controls="nails-carousel-viewport"
-            onClick={() => carouselApi?.scrollPrev()}
-          >
-            <ChevronLeft size={22} strokeWidth={1.75} aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            className="massage-carousel-arrow massage-carousel-next"
-            aria-label="Next nail treatment"
-            aria-controls="nails-carousel-viewport"
-            onClick={() => carouselApi?.scrollNext()}
-          >
-            <ChevronRight size={22} strokeWidth={1.75} aria-hidden="true" />
-          </button>
-        </div>
-        <p className="massage-carousel-status" role="status" aria-atomic="true">
-          Treatment {currentSlide + 1} of {treatments.length}
-        </p>
+      </div>
+      </div>
+      <div className="massage-carousel-controls nails-carousel-controls">
+        <button type="button" className="massage-carousel-arrow massage-carousel-prev"
+          aria-label="Previous nail treatment" aria-controls="nails-grid"
+          onClick={() => carouselApi?.scrollPrev()}>
+          <ChevronLeft size={38} strokeWidth={1.5} aria-hidden="true" />
+        </button>
+        <button type="button" className="massage-carousel-arrow massage-carousel-next"
+          aria-label="Next nail treatment" aria-controls="nails-grid"
+          onClick={() => carouselApi?.scrollNext()}>
+          <ChevronRight size={38} strokeWidth={1.5} aria-hidden="true" />
+        </button>
+      </div>
       </div>
       <div className="nails-designs-mobile">{designsButton}</div>
       </div>

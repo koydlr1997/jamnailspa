@@ -109,7 +109,6 @@
 }
 
 .services-nails .services-heading {
-  font-size: clamp(24px, 3vw, 48px);
   overflow-wrap: normal;
 }
 
@@ -138,6 +137,53 @@
   display: none;
 }
 
+.nails-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px 12px;
+  min-width: 0;
+  scroll-margin-top: 100px;
+}
+
+.nails-cards-container {
+  position: relative;
+  min-width: 0;
+}
+
+.nails-carousel-controls {
+  display: none;
+}
+
+.nails-card .service-card-media {
+  aspect-ratio: 3 / 4;
+}
+
+.services-nails .nails-card::before {
+  content: none;
+}
+
+.services-nails .nails-card .massage-card-heading,
+.services-nails .nails-card .massage-card-title {
+  white-space: normal;
+}
+
+.services-nails .nails-card .massage-card-heading {
+  margin-top: 12px;
+  line-height: 1.1;
+}
+
+@media (min-width: 540px) and (max-width: 1199px) {
+  .nails-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 539px) {
+  .nails-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .services-nails .massage-carousel {
   --service-card-gap: clamp(18px, 1.8vw, 28.8px);
   min-width: 0;
@@ -146,28 +192,12 @@
 
 .services-nails .service-card-description {
   max-width: none;
-  text-align: justify;
+  text-align: left;
   font-size: 13.5px;
 }
 
-.services-nails .massage-card-heading {
-  margin: 18px 0 7.2px;
-  font-size: clamp(21.6px, 1.98vw, 30.6px);
-  line-height: clamp(17.28px, 1.584vw, 24.48px);
-}
-
-.services-nails .massage-card-title {
-  margin-bottom: 7.2px;
-  font-size: 12.6px;
-}
-
-.services-nails .massage-card-title:not(.massage-card-price) {
-  line-height: 16.38px;
-}
-
 .services-nails .massage-card-price {
-  margin-top: 7.2px;
-  font-size: 14.4px;
+  font-size: 18px;
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
@@ -187,7 +217,137 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .services.services-nails {
+    min-height: 100vh;
+  }
+}
+
+@media (min-width: 768px) {
+  .services-nails-layout {
+    position: relative;
+  }
+
+  .services-nails-layout::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc((100% - clamp(32px, 4vw, 64px)) * 0.325 - 1px);
+    width: 1px;
+    background: #e9e5e1;
+    pointer-events: none;
+  }
+
+  .services-nails .services-header {
+    position: sticky;
+    top: 110px;
+    align-self: start;
+    border-right: 0;
+  }
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .services-nails.is-reveal-ready .services-nails-layout::before {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 1200ms ease, transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: 150ms;
+  }
+
+  .services-nails.is-revealed .services-nails-layout::before {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 767px) {
+  .nails-cards-container {
+    --service-card-gap: clamp(12px, 1.5vw, 24px);
+    --massage-card-width: calc((100% - 2 * var(--service-card-gap)) / 1.25);
+  }
+
+  .nails-cards-viewport {
+    overflow: hidden;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .nails-cards-viewport:not(.is-positioned) {
+    visibility: hidden;
+  }
+
+  .nails-grid {
+    display: flex;
+    gap: 0;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .nails-card {
+    flex: 0 0 var(--massage-card-width);
+    margin-right: var(--service-card-gap);
+    min-width: 0;
+  }
+
+  .nails-carousel-controls {
+    display: block;
+    --service-image-ratio: 3 / 4;
+    overflow: clip;
+  }
+
+  .services-nails .nails-card .service-card-media {
+    transform: scale(calc(0.8 + 0.2 * var(--card-presence, 1)));
+    transform-origin: center;
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .services-nails .nails-card.is-edge-left .service-card-media {
+    transform-origin: right center;
+  }
+
+  .services-nails .nails-card.is-edge-right .service-card-media {
+    transform-origin: left center;
+  }
+
+  .services-nails .nails-card .service-card-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 60%);
+    opacity: calc(1 - var(--card-presence, 1));
+    pointer-events: none;
+  }
+
+  .services-nails .nails-card > :is(.massage-card-heading, .massage-card-title) {
+    opacity: 1;
+    transition: opacity 180ms ease, visibility 0s;
+  }
+
+  .services-nails .nails-card:not(.is-fully-visible) > :is(.massage-card-heading, .massage-card-title) {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 250ms ease, visibility 0s 250ms;
+  }
+
+  .nails-carousel-controls .massage-carousel-arrow {
+    top: 0;
+    width: calc(var(--massage-card-width) / 8);
+    min-width: 44px;
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #fff;
+    box-shadow: none;
+    transform: none;
+    animation: none;
+    scale: 1;
+  }
+
+  .nails-carousel-controls .massage-carousel-arrow:focus-visible {
+    outline-color: #fff;
+    outline-offset: -5px;
+  }
+
   .nails-designs-desktop {
     display: none;
   }
@@ -203,6 +363,8 @@
 
   .services-nails-layout {
     grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    margin-inline: 0;
   }
 
   .services-nails .massage-carousel {
@@ -212,7 +374,9 @@
   }
 
   .services-nails .services-header {
-    padding: 0 0 clamp(28px, 3vw, 48px);
+    width: 80%;
+    margin-inline: 10%;
+    padding: 0 0 clamp(14px, 1.5vw, 24px);
     border-right: 0;
     border-left: 0;
     border-bottom: 1px solid #e9e5e1;
@@ -220,5 +384,12 @@
 
   .services-nails .services-title {
     line-height: 1.2;
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .services-nails .nails-card .service-card-media,
+  .services-nails .nails-card > :is(.massage-card-heading, .massage-card-title) {
+    transition: none !important;
   }
 }

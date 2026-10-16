@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import useEmblaCarousel from 'embla-carousel-react'
+import useSectionReveal from '../hooks/useSectionReveal'
+import useCarouselEdges from '../hooks/useCarouselEdges'
 import './Services.css'
 import './Services_massage.css'
 
@@ -135,9 +137,13 @@ const treatments = [
 
 export default function ServicesMassage() {
   const sectionRef = useRef<HTMLElement>(null)
+  useSectionReveal(sectionRef)
   const [carouselRef, carouselApi] = useEmblaCarousel({
     loop: true,
-    align: 'start',
+    align: (viewSize, slideSize) => {
+      const gap = Math.min(24, Math.max(12, viewSize * 0.015))
+      return slideSize / 8 + gap
+    },
     slidesToScroll: 1,
     duration: 35,
     breakpoints: {
@@ -145,6 +151,21 @@ export default function ServicesMassage() {
     },
   })
   const [currentSlide, setCurrentSlide] = useState(0)
+
+  useCarouselEdges(carouselApi)
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current
+    const image = section?.querySelector<HTMLElement>('.service-card-media')
+    if (!section || !image) return
+
+    // Keep carousel arrows centered as the image expands to fill the section.
+    const observer = new ResizeObserver(() => {
+      section.style.setProperty('--massage-image-height', `${image.offsetHeight}px`)
+    })
+    observer.observe(image)
+    return () => observer.disconnect()
+  }, [])
 
 
   useLayoutEffect(() => {
@@ -193,7 +214,9 @@ export default function ServicesMassage() {
 
   useEffect(() => {
     if (!carouselApi) return
-    const updateSelection = () => setCurrentSlide(carouselApi.selectedScrollSnap())
+    const updateSelection = () => {
+      setCurrentSlide(carouselApi.selectedScrollSnap())
+    }
     updateSelection()
     carouselApi.on('select', updateSelection).on('reInit', updateSelection)
     return () => {
@@ -254,13 +277,15 @@ export default function ServicesMassage() {
                     width={600}
                     height={800}
                   />
+                  <span className="service-card-caption">
+                    <span className="massage-card-price">{treatment.price}</span>
+                  </span>
                 </div>
                 <h3 className="massage-card-heading">{treatment.heading}</h3>
                 <p className="massage-card-title">{treatment.title}</p>
                 <p className="service-card-description">
                   {treatment.description}
                 </p>
-                <p className="massage-card-title massage-card-price">{treatment.price}</p>
               </article>
             ))}
           </div>
@@ -273,7 +298,7 @@ export default function ServicesMassage() {
             aria-controls="massage-carousel-viewport"
             onClick={() => carouselApi?.scrollPrev()}
           >
-            <ChevronLeft size={22} strokeWidth={1.75} aria-hidden="true" />
+            <ChevronLeft size={38} strokeWidth={1.5} aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -282,7 +307,7 @@ export default function ServicesMassage() {
             aria-controls="massage-carousel-viewport"
             onClick={() => carouselApi?.scrollNext()}
           >
-            <ChevronRight size={22} strokeWidth={1.75} aria-hidden="true" />
+            <ChevronRight size={38} strokeWidth={1.5} aria-hidden="true" />
           </button>
         </div>
         <p className="massage-carousel-status" role="status" aria-atomic="true">

@@ -9,6 +9,7 @@ const socialLinks = [
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(() => window.scrollY > 8)
+  const [isHidden, setIsHidden] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 1023px)').matches)
   const navbarRef = useRef<HTMLElement>(null)
@@ -19,13 +20,34 @@ export default function Navbar() {
   }
 
   useEffect(() => {
+    const hero = document.getElementById('home')
+    let previousScrollY = Math.max(0, window.scrollY)
+
     function updateScrollState() {
-      setIsScrolled(window.scrollY > 8)
+      const scrollY = Math.max(0, window.scrollY)
+      const direction = scrollY - previousScrollY
+      const heroVisible = hero ? hero.getBoundingClientRect().bottom > 0 : scrollY === 0
+
+      setIsScrolled(scrollY > 8)
+      if (heroVisible) {
+        setIsHidden(false)
+      } else if (direction !== 0) {
+        setIsHidden(direction > 0)
+        if (direction > 0) setMobileMenuOpen(false)
+      }
+      previousScrollY = scrollY
     }
 
     updateScrollState()
     window.addEventListener('scroll', updateScrollState, { passive: true })
-    return () => window.removeEventListener('scroll', updateScrollState)
+    window.addEventListener('resize', updateScrollState)
+    const heroObserver = hero ? new ResizeObserver(updateScrollState) : null
+    if (hero) heroObserver?.observe(hero)
+    return () => {
+      window.removeEventListener('scroll', updateScrollState)
+      window.removeEventListener('resize', updateScrollState)
+      heroObserver?.disconnect()
+    }
   }, [])
 
   useEffect(() => {
@@ -52,7 +74,10 @@ export default function Navbar() {
   }, [])
 
   return (
-    <header className={`site-header${isScrolled ? ' is-scrolled' : ''}${isMobile && mobileMenuOpen ? ' is-menu-open' : ''}`}>
+    <header
+      className={`site-header${isScrolled ? ' is-scrolled' : ''}${isHidden ? ' is-hidden' : ''}${isMobile && mobileMenuOpen ? ' is-menu-open' : ''}`}
+      inert={isHidden}
+    >
       <nav
         ref={navbarRef}
         aria-label="Main navigation"

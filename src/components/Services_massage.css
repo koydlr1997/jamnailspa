@@ -1,5 +1,13 @@
 .services.services-massage {
+  width: 100%;
+  margin-inline: 0;
+  background-color: #fff;
   padding-bottom: clamp(27.72px, 2.8875vw, 46.2px);
+}
+
+.services-massage > .services-header {
+  width: 80%;
+  margin-inline: 10%;
 }
 
 .massage-carousel {
@@ -22,6 +30,7 @@
 
 .massage-carousel-track {
   display: flex;
+  column-gap: var(--service-card-gap);
   touch-action: pan-y pinch-zoom;
 }
 
@@ -29,11 +38,10 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: repeat(5, auto);
-  align-content: start;
+  grid-template-rows: auto auto auto 1fr;
   flex: 0 0 var(--massage-card-width);
   min-width: 0;
-  margin-right: var(--service-card-gap);
+  margin-right: 0;
 }
 
 .massage-carousel-card > * {
@@ -79,6 +87,10 @@
 .massage-carousel-prev {
   left: 0;
   transform: translate(-50%, -50%);
+}
+
+.massage-carousel-arrow[hidden] {
+  display: none;
 }
 
 .massage-carousel-next {
@@ -193,18 +205,24 @@
   line-height: 18.2px;
 }
 
+.services-massage .massage-card-title:not(.massage-card-price) {
+  text-transform: uppercase;
+}
+
 .services-massage .service-card-description {
   max-width: none;
-  text-align: justify;
+  text-align: left;
 }
 
 .massage-card-price {
-  margin-top: 8px;
+  display: block;
+  margin: 0;
   text-align: right;
   font-family: var(--font-roboto-condensed);
-  color: #625b54;
-  font-size: 16px;
-  line-height: .8;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 @media (min-width: 768px) and (max-width: 1199px) {
   .services.services-massage {
@@ -213,10 +231,188 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .services.services-massage {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .services-massage .massage-carousel,
+  .services-massage .massage-carousel-viewport {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .services-massage .massage-carousel-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--massage-card-width);
+    grid-template-rows: 1fr auto auto auto;
+    column-gap: var(--service-card-gap);
+    flex: 1;
+  }
+
+  .services-massage .massage-carousel-card {
+    grid-row: 1 / span 4;
+    grid-template-rows: subgrid;
+    margin-right: 0;
+  }
+
+  .services-massage .service-card-description {
+    align-self: start;
+  }
+
+  .services-massage .service-card-media {
+    aspect-ratio: auto;
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  .services-massage .massage-carousel-controls::before {
+    height: var(--massage-image-height);
+    aspect-ratio: auto;
+  }
+
+  .services-massage .massage-carousel-card::before {
+    height: var(--massage-image-height);
+    aspect-ratio: auto;
+  }
+}
+
+/* One full card plus two eighth previews, with two gaps. */
+.services-massage .massage-carousel {
+  --service-card-gap: clamp(12px, 1.5vw, 24px);
+  --massage-card-width: calc((100% - 2 * var(--service-card-gap)) / 1.25);
+}
+
+/* Include the final gap in Embla's loop measurements, just like every other slide. */
+.services-massage .massage-carousel-track {
+  column-gap: 0;
+}
+
+.services-massage .massage-carousel-card {
+  margin-right: var(--service-card-gap);
+}
+
+#services-massage .massage-carousel-card::before {
+  content: none;
+}
+
+.services-massage .massage-carousel-viewport:not(.is-positioned) {
+  visibility: hidden;
+}
+
+@media (min-width: 1024px) {
+  .services-massage .massage-carousel-track {
+    grid-auto-columns: calc(var(--massage-card-width) + var(--service-card-gap));
+  }
+}
+
+.services-massage .massage-carousel-card > :is(.massage-card-heading, .massage-card-title, .service-card-description) {
+  opacity: 1;
+  transition: opacity 180ms ease, visibility 0s;
+}
+
+.services-massage .massage-carousel-card:not(.is-fully-visible) > :is(.massage-card-heading, .massage-card-title, .service-card-description) {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 250ms ease, visibility 0s 250ms;
+}
+
+.services-massage .massage-carousel-card .service-card-media {
+  transform: scale(calc(0.8 + 0.2 * var(--card-presence, 1)));
+  transform-origin: center;
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.services-massage .massage-carousel-card.is-edge-left .service-card-media {
+  transform-origin: right center;
+}
+
+.services-massage .massage-carousel-card.is-edge-right .service-card-media {
+  transform-origin: left center;
+}
+
+.services-massage .massage-carousel-card .service-card-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 60%);
+  opacity: calc(1 - var(--card-presence, 1));
+  pointer-events: none;
+}
+
+.services-massage .massage-carousel-controls {
+  height: var(--massage-image-height, 0px);
+  overflow: clip;
+}
+
+.services-massage .massage-carousel-controls::before {
+  content: none;
+}
+
+.services-massage .massage-carousel-arrow {
+  top: 0;
+  bottom: auto;
+  width: calc(var(--massage-card-width) / 8);
+  min-width: 44px;
+  overflow: clip;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #fff;
+  box-shadow: none;
+  transform: none;
+  animation: none;
+  scale: 1;
+  transition: color 200ms ease;
+}
+
+.services-massage .massage-carousel-prev,
+.services-massage .massage-carousel-next {
+  background: transparent;
+  isolation: isolate;
+}
+
+.services-massage .massage-carousel-arrow:hover,
+.services-massage .massage-carousel-arrow:active {
+  color: #ffd9bd;
+}
+
+.services-massage .massage-carousel-arrow:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -5px;
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .services-massage .massage-carousel {
+    --massage-card-width: calc((100% - 3 * var(--service-card-gap)) / 2.25);
+  }
+}
+
+@media (min-width: 1200px) {
+  .services-massage .massage-carousel {
+    --massage-card-width: calc((100% - 5 * var(--service-card-gap)) / 4.25);
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .services-massage .massage-carousel-card .service-card-media,
+  .services-massage .massage-carousel-card .service-card-image,
+  .services-massage .massage-carousel-card > :is(.massage-card-heading, .massage-card-title, .service-card-description) {
+    transition: none;
+  }
+}
+
 /* Allow the longer tagline to wrap without overlapping on small screens. */
 @media (max-width: 767px) {
   .services.services-massage {
     min-height: 0;
+    padding-bottom: 0;
   }
 
   .services-massage .services-title {

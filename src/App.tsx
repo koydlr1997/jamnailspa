@@ -9,6 +9,7 @@ import ServicesEyelash from './components/Services_eyelash'
 import ServicesWaxing from './components/Services_waxing'
 import Intro from './components/Intro'
 import useSmoothScroll from './hooks/useSmoothScroll'
+import useImageParallax from './hooks/useImageParallax'
 
 export default function App() {
   const [introPhase, setIntroPhase] = useState<'playing' | 'exiting' | 'complete'>('playing')
@@ -24,6 +25,7 @@ export default function App() {
   }, [])
 
   useSmoothScroll(!introVisible)
+  useImageParallax()
 
   useLayoutEffect(() => {
     if (!introVisible) return
